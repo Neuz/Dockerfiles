@@ -6,7 +6,7 @@ Docker image based on ***frps*** service in [fatedier/frp](https://github.com/fa
 
 ---
 
-![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuzz/frps) ![Docker Pulls](https://img.shields.io/docker/pulls/neuzz/frps) ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/neuzz/frps) 
+![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuzz/frps) ![Docker Pulls](https://img.shields.io/docker/pulls/neuzz/frps) ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/neuzz/frps) 
 
 ---
 
