@@ -14,6 +14,8 @@
 
 ---
 
+![](imgs/example.png)
+
 ## 内容列表
 
 - [ddns-dnspod](#ddns-dnspod)

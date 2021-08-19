@@ -14,6 +14,8 @@ Dynamic DNS service image to detect IP changes and update to [DNSPod](https://ww
 
 ---
 
+![](imgs/example.png)
+
 ## Table of Contents
 
 - [ddns-dnspod](#ddns-dnspod)
