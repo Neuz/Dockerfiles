@@ -1,6 +1,6 @@
 # ddns-dnspod
 
-动态 DNS 服务镜像，用于检测 IP 变化并更新至 [DNSPod](https://www.dnspod.cn/)
+Dynamic DNS service image to detect IP changes and update to [DNSPod](https://www.dnspod.cn/)
 
 [DockerHub](https://hub.docker.com/r/neuzz/ddns-dnspod) | [GitHub](https://github.com/Neuz/Dockerfiles/tree/main/ddns-dnspod)
 
@@ -14,47 +14,47 @@
 
 ---
 
-## 内容列表
+## Table of Contents
 
 - [ddns-dnspod](#ddns-dnspod)
-  - [内容列表](#内容列表)
-  - [用法](#用法)
-    - [环境变量方式](#环境变量方式)
-    - [配置文件方式](#配置文件方式)
-  - [更新日志](#更新日志)
-  - [维护人员](#维护人员)
-  - [相关](#相关)
-  - [许可](#许可)
+  - [Table of Contents](#table-of-contents)
+  - [Usage](#usage)
+    - [Environment variable](#environment-variable)
+    - [Configuration file](#configuration-file)
+  - [Changelog](#changelog)
+  - [Maintainers](#maintainers)
+  - [Related](#related)
+  - [License](#license)
 
-## 用法
+## Usage
 
-配置项支持 ***环境变量*** 以及 ***配置文件*** 两种方式
+configuration support ***Environment variable*** and ***Configuration file*** two ways.
 
-### 环境变量方式
+### Environment variable
 
-环境变量说明：
+Environment variable definition:
 
 ```
-# DNSPod API 密钥中的 ID
+# DNSPod API ID
 DNSPOD_ID=123456
 
-# DNSPod API 密钥中的 Token
+# DNSPod API Token
 DNSPOD_TOKEN=123456
 
-# 需要更新的顶级域名
+# need to update domain
 DOMAIN=example.com
 
-# 需要更新的子域名，如：www、sub，如果是根域名，直接填 @
+# need to update subdomain, example：www、sub, if root domain, use @
 SUB_DOMAIN=example
 
-# 更新间隔时间（秒），不允许小于30秒
+# update interval time(Seconds), need greater than 30 seconds
 INTERNAL=50
 
-# 邮箱
+# email
 EMAIL=example@example.com
 ```
 
-运行docker
+docker run
 
 ```
 docker run -dit \
@@ -67,32 +67,32 @@ docker run -dit \
     neuzz/ddns-dnspod:latest
 ```
 
-### 配置文件方式
+### Configuration file
 
-配置文件 `app.config` 说明：
+Configuration file `app.config` definition
 
 ```
 [cfg]
-# DNSPod API 密钥中的 ID
+# DNSPod API ID
 dnspod_id = 123456
 
-# DNSPod API 密钥中的 Token
+# DNSPod API Token
 dnspod_token = 123456
 
-# 需要更新的顶级域名
+# need to update domain
 domain = example.com
 
-# 需要更新的子域名，如：`www`、`sub`，如果是根域名，填`@`
+# need to update subdomain, example：www、sub, if root domain, use @
 sub_domain = example
 
-# 更新间隔时间（秒），不允许小于30秒
+# update interval time(Seconds), need greater than 30 seconds
 internal = 50
 
-# 邮箱
+# email
 email = example@example.com
 ```
 
-运行docker
+docker run
 
 ```
 docker run -dit \
@@ -100,20 +100,20 @@ docker run -dit \
     neuzz/ddns-dnspod:latest
 ```
 
-## 更新日志
+## Changelog
 
-- `latest` 为最新版
-- `Tags` 为历史版本
+- `latest` - latest version
+- `Tags` - history version
 
-## 维护人员
+## Maintainers
 
 - [viacooky](https://github.com/viacooky)
 
-## 相关
+## Related
 
-- [DNSPOD 密钥管理文档](https://docs.dnspod.cn/account/5f2d466de8320f1a740d9ff3/)
+- [DNSPOD Token Document](https://docs.dnspod.cn/account/5f2d466de8320f1a740d9ff3/)
 - [scofieldpeng/dnspod-ddns](https://github.com/scofieldpeng/dnspod-ddns)
 
-## 许可
+## License
 
 [MIT License](../LICENSE) © 2021 Neuz

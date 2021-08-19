@@ -2,6 +2,7 @@
 
 Docker images of common services
 
-| image                                                       | note                                                                             |
-| ---------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [frps](https://github.com/Neuz/Dockerfiles/tree/main/frps) | 基于 [fatedier/frp](https://github.com/fatedier/frp) 服务端 frps 的 docker 镜像. |
+| docker                                                                   | note                                                                                          |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| [frps](https://github.com/Neuz/Dockerfiles/tree/main/frps)               | Docker image based on ***frps*** service in [fatedier/frp](https://github.com/fatedier/frp) . |
+| [ddns-dnspod](https://github.com/Neuz/Dockerfiles/tree/main/ddns-dnspod) | Dynamic DNS service image to detect IP changes and update to [DNSPod](https://www.dnspod.cn/) |
