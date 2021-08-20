@@ -105,7 +105,12 @@ docker run -dit \
 ## Changelog
 
 - `latest` - latest version
-- `Tags` - history version
+
+- `0.0.2` --- 2021-08-20
+  ```
+  1. Remove the verification limit of the minimum interval of 3 seconds, which is managed by the user
+  2. add domain record cache, reacquire when timeout 10 minutes
+  ```
 
 ## Maintainers
 
@@ -113,6 +118,7 @@ docker run -dit \
 
 ## Related
 
+- [DNSPOD API](https://www.dnspod.cn/docs/index.html)
 - [DNSPOD Token Document](https://docs.dnspod.cn/account/5f2d466de8320f1a740d9ff3/)
 - [scofieldpeng/dnspod-ddns](https://github.com/scofieldpeng/dnspod-ddns)
 

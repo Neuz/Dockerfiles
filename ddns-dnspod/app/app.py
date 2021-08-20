@@ -8,8 +8,9 @@ import logging
 import requests
 import time
 
+
 # 格式化logging
-LOG_LEVEL = logging.DEBUG if os.getenv('DEBUG_MODE') else logging.INFO
+LOG_LEVEL = logging.DEBUG if os.getenv('DEBUG_MODE') and os.getenv('DEBUG_MODE') == '1' else logging.INFO
 LOG_FORMAT = "[%(asctime)s][%(levelname)s] - %(message)s"
 logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
 
@@ -23,7 +24,7 @@ class Config(object):
     email           : str = None # 邮箱    # 格式 'my@email.com'
     record_ip       : str = None # DNSPOD记录IP
     record_id       : str = None # DNSPOD记录ID，系统生成
-    last_update_time: str = None # 上次更新时间戳，系统生成
+    last_update_time: int = None # 上次更新时间戳，系统生成
 
     cfg_file_path   : str = 'app.config' # 配置文件路径
 
@@ -46,8 +47,8 @@ class Config(object):
                 raise Exception('配置参数异常：sub_domain 为空')
             if(not(self.internal)):
                 raise Exception('配置参数异常：internal 为空')
-            if(self.internal < 3):
-                raise Exception('配置参数异常：internal 执行间隔不允许小于3秒')
+            # if(self.internal < 3):
+            #     raise Exception('配置参数异常：internal 执行间隔不允许小于3秒')
             if(not(self.email)):
                 raise Exception('配置参数异常：email 为空')
             logging.info('配置校验完成')
@@ -65,12 +66,13 @@ class Config(object):
     # 从环境变量获取配置
     def get_config_from_env(self):
         logging.info(f'读取环境变量')
-        self.dnspod_id    = os.getenv('DNSPOD_ID')
-        self.dnspod_token = os.getenv('DNSPOD_TOKEN')
-        self.domain       = os.getenv('DOMAIN')
-        self.sub_domain   = os.getenv('SUB_DOMAIN')
-        self.internal     = int(os.getenv('INTERNAL')) if os.getenv('INTERNAL') else 30
-        self.email        = os.getenv('EMAIL')
+        self.dnspod_id        = os.getenv('DNSPOD_ID')
+        self.dnspod_token     = os.getenv('DNSPOD_TOKEN')
+        self.domain           = os.getenv('DOMAIN')
+        self.sub_domain       = os.getenv('SUB_DOMAIN')
+        self.internal         = int(os.getenv('INTERNAL')) if os.getenv('INTERNAL') else 30
+        self.email            = os.getenv('EMAIL')
+        self.last_update_time = 0
 
     # 从文件获取配置
     def get_config_from_file(self):
@@ -80,12 +82,13 @@ class Config(object):
         parser = configparser.ConfigParser()
         parser.read(self.cfg_file_path)
 
-        self.dnspod_id    = parser.get('cfg', 'dnspod_id')
-        self.dnspod_token = parser.get('cfg', 'dnspod_token')
-        self.domain       = parser.get('cfg', 'domain')
-        self.sub_domain   = parser.get('cfg', 'sub_domain')
-        self.internal     = int(parser.get('cfg', 'internal')) if parser.get('cfg', 'internal') else 30
-        self.email        = parser.get('cfg', 'email')
+        self.dnspod_id        = parser.get('cfg', 'dnspod_id')
+        self.dnspod_token     = parser.get('cfg', 'dnspod_token')
+        self.domain           = parser.get('cfg', 'domain')
+        self.sub_domain       = parser.get('cfg', 'sub_domain')
+        self.internal         = int(parser.get('cfg', 'internal')) if parser.get('cfg', 'internal') else 30
+        self.email            = parser.get('cfg', 'email')
+        self.last_update_time = 0
 
 
 class Tools(object):
@@ -102,16 +105,23 @@ class Tools(object):
             return str(json.loads(result.text)['origin'])
 
 
-class Dnspod(object):
+class DnspodApi(object):
+
+    __API_NAME = 'Dnspod-Api'
+    __API_VERSION = '0.0.2'
+
     get_record_url    = 'https://dnsapi.cn/Record.List'
     update_record_url = 'https://dnsapi.cn/Record.Modify'
 
-    @classmethod
-    def update_record(cls, cfg: Config):
-        headers = {
-            'User-Agent': f'DNSPOD-DDNS-CLIENT/1.0.0({cfg.email})',
+    def __get_headers(self, email: str):
+        return {
+            'User-Agent': f'{self.__API_NAME}/{self.__API_VERSION}({email})',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
+
+    @classmethod
+    def update_record(cls, cfg: Config):
+        headers = cls.__get_headers(cls, cfg.email)
         data = {
             'login_token': f'{cfg.dnspod_id},{cfg.dnspod_token}',
             'format': 'json',
@@ -133,10 +143,7 @@ class Dnspod(object):
 
     @classmethod
     def get_record(cls, cfg: Config):
-        headers = {
-            'User-Agent': f'DNSPOD-DDNS-CLIENT/1.0.0({cfg.email})',
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        headers = cls.__get_headers(cls, cfg.email)
         data = {
             'login_token': f'{cfg.dnspod_id},{cfg.dnspod_token}',
             'format': 'json',
@@ -157,21 +164,26 @@ class Dnspod(object):
 
 
 def run(cfg: Config):
+    current_time = int(round(time.time() * 1000))
+    is_record_timeout = (current_time - cfg.last_update_time) > 600000 # 10分钟
+    
     # 初始化获取域名记录
-    if(not(cfg.record_ip)):
-        record = Dnspod().get_record(cfg)
-        cfg.record_ip = record['value']
-        cfg.record_id = record['id']
+    if(not(cfg.record_ip) or is_record_timeout):
+        logging.debug('记录超时 或 没有域名记录')
+        record = DnspodApi().get_record(cfg)
+        cfg.record_ip        = record['value']
+        cfg.record_id        = record['id']
+        cfg.last_update_time = current_time
 
     # 获取公网IP
     public_ip = Tools().get_public_ip()
 
     if(cfg.record_ip == public_ip):
-        logging.info(f'公网IP没有变化: {public_ip}')
+        logging.debug(f'公网IP没有变化: {public_ip}')
         return
 
     cfg.record_ip = public_ip
-    Dnspod().update_record(cfg)
+    DnspodApi().update_record(cfg)
 
 
 if __name__ == '__main__':

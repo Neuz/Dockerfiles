@@ -87,8 +87,8 @@ domain = example.com
 # 需要更新的子域名，如：`www`、`sub`，如果是根域名，填`@`
 sub_domain = example
 
-# 更新间隔时间（秒），不允许小于30秒
-internal = 50
+# 更新间隔时间（秒) - 避免触发`获取公网IP接口`访问限制，建议设置在30秒以上
+internal = 30
 
 # 邮箱
 email = example@example.com
@@ -105,7 +105,12 @@ docker run -dit \
 ## 更新日志
 
 - `latest` 为最新版
-- `Tags` 为历史版本
+
+- `0.0.2` --- 2021-08-20
+  ```
+  1. 去除最小间隔时间 3 秒的校验限制，由用户自行管理
+  2. 增加本地缓存域名解析记录超时设置，超过10分钟后，根据接口重新获取域名解析记录
+  ```
 
 ## 维护人员
 
@@ -113,6 +118,7 @@ docker run -dit \
 
 ## 相关
 
+- [DNSPOD API](https://www.dnspod.cn/docs/index.html)
 - [DNSPOD 密钥管理文档](https://docs.dnspod.cn/account/5f2d466de8320f1a740d9ff3/)
 - [scofieldpeng/dnspod-ddns](https://github.com/scofieldpeng/dnspod-ddns)
 
