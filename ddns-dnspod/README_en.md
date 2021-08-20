@@ -6,7 +6,7 @@ Dynamic DNS service image to detect IP changes and update to [DNSPod](https://ww
 
 ---
 
-![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuzz/ddns-dnspod) ![Docker Pulls](https://img.shields.io/docker/pulls/neuzz/ddns-dnspod) ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/neuzz/ddns-dnspod) 
+![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuzz/ddns-dnspod) ![Docker Pulls](https://img.shields.io/docker/pulls/neuzz/ddns-dnspod) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/neuzz/ddns-dnspod/latest)
 
 ---
 
