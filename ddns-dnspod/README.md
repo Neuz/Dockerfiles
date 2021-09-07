@@ -2,11 +2,11 @@
 
 动态 DNS 服务镜像，用于检测 IP 变化并更新至 [DNSPod](https://www.dnspod.cn/)
 
-[DockerHub](https://hub.docker.com/r/neuzz/ddns-dnspod) | [GitHub](https://github.com/Neuz/Dockerfiles/tree/main/ddns-dnspod)
+[DockerHub](https://hub.docker.com/r/neuznet/ddns-dnspod) | [GitHub](https://github.com/Neuz/Dockerfiles/tree/main/ddns-dnspod)
 
 ---
 
-![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuzz/ddns-dnspod) ![Docker Pulls](https://img.shields.io/docker/pulls/neuzz/ddns-dnspod) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/neuzz/ddns-dnspod/latest)
+![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuznet/ddns-dnspod) ![Docker Pulls](https://img.shields.io/docker/pulls/neuznet/ddns-dnspod) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/neuznet/ddns-dnspod/latest)
 
 ---
 
@@ -66,7 +66,7 @@ docker run -dit \
     -e SUB_DOMAIN=example \
     -e INTERNAL=50 \
     -e EMAIL=example@example.com \
-    neuzz/ddns-dnspod:latest
+    neuznet/ddns-dnspod:latest
 ```
 
 ### 配置文件方式
@@ -99,7 +99,7 @@ email = example@example.com
 ```
 docker run -dit \
     -v <YOUR_CONFIG_FILE>:/app/app.config \
-    neuzz/ddns-dnspod:latest
+    neuznet/ddns-dnspod:latest
 ```
 
 ## 更新日志

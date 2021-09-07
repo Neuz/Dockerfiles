@@ -2,11 +2,11 @@
 
 基于 [fatedier/frp](https://github.com/fatedier/frp) 服务端 frps 的 docker 镜像.
 
-[DockerHub](https://hub.docker.com/r/neuzz/frps) | [GitHub](https://github.com/Neuz/Dockerfiles/tree/main/frps)
+[DockerHub](https://hub.docker.com/r/neuznet/frps) | [GitHub](https://github.com/Neuz/Dockerfiles/tree/main/frps)
 
 ---
 
-![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuzz/frps) ![Docker Pulls](https://img.shields.io/docker/pulls/neuzz/frps) ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/neuzz/frps/latest) 
+![GitHub](https://img.shields.io/github/license/neuz/Dockerfiles) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/neuznet/frps) ![Docker Pulls](https://img.shields.io/docker/pulls/neuznet/frps) ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/neuznet/frps/latest) 
 
 ---
 
@@ -44,7 +44,7 @@
         -p 7000:7000 \
         -p 7500:7500 \
         -p 10001-10050:10001-10050 \
-        neuzz/frps:latest
+        neuznet/frps:latest
     ```
 
 ## 更新日志
