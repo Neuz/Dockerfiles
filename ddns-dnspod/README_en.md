@@ -106,6 +106,12 @@ docker run -dit \
 
 - `latest` - latest version
 
+- `0.0.3` --- 2021-10-09
+
+  ```
+  1. Code optimization, output information optimization
+  ```
+
 - `0.0.2` --- 2021-08-20
   ```
   1. Remove the verification limit of the minimum interval of 3 seconds, which is managed by the user
