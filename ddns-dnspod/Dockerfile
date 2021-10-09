@@ -13,7 +13,7 @@ COPY app ${APP_PATH}
 RUN apk add --no-cache --update \
     tzdata \
     && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
-    && echo "${TIMEZONE} > /etc/timezone" \
+    && echo "${TIMEZONE}" > /etc/timezone \
     && pip3 install -r requirements.txt \
     && apk del tzdata
 
