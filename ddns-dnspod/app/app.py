@@ -16,16 +16,15 @@ logging.basicConfig(format=LOG_FORMAT, level=LOG_LEVEL)
 
 
 class Config(object):
-    dnspod_id       : str = None # dnspod id
-    dnspod_token    : str = None # dnspod token
-    domain          : str = None # 默认 域名 # 格式 domain.com
-    sub_domain      : str = None # 子域名   # 格式 www
-    internal        : int = 30   # 最小更新间隔 秒
-    email           : str = None # 邮箱    # 格式 'my@email.com'
-    record_ip       : str = None # DNSPOD记录IP
-    record_id       : str = None # DNSPOD记录ID，系统生成
-    last_update_time: int = None # 上次更新时间戳，系统生成
-
+    dnspod_id       : str = None         # dnspod id
+    dnspod_token    : str = None         # dnspod token
+    domain          : str = None         # 默认 域名 # 格式 domain.com
+    sub_domain      : str = None         # 子域名   # 格式 www
+    internal        : int = 30           # 最小更新间隔 秒
+    email           : str = None         # 邮箱    # 格式 'my@email.com'
+    record_ip       : str = None         # DNSPOD记录IP
+    record_id       : str = None         # DNSPOD记录ID，系统生成
+    last_update_time: int = None         # 上次更新时间戳，系统生成
     cfg_file_path   : str = 'app.config' # 配置文件路径
 
     def __init__(self) -> None:
@@ -35,22 +34,15 @@ class Config(object):
         self.get_config_from_file()
         self.check_config()
 
+    @classmethod
     def check_config(self):
         try:
-            if(not(self.dnspod_id)):
-                raise Exception('配置参数异常：dnspod_id 为空')
-            if(not(self.dnspod_token)):
-                raise Exception('配置参数异常：dnspod_token 为空')
-            if(not(self.domain)):
-                raise Exception('配置参数异常：domain 为空')
-            if(not(self.sub_domain)):
-                raise Exception('配置参数异常：sub_domain 为空')
-            if(not(self.internal)):
-                raise Exception('配置参数异常：internal 为空')
-            # if(self.internal < 3):
-            #     raise Exception('配置参数异常：internal 执行间隔不允许小于3秒')
-            if(not(self.email)):
-                raise Exception('配置参数异常：email 为空')
+            if(not(self.dnspod_id)): raise Exception('配置参数异常：dnspod_id 为空')
+            if(not(self.dnspod_token)): raise Exception('配置参数异常：dnspod_token 为空')
+            if(not(self.domain)): raise Exception('配置参数异常：domain 为空')
+            if(not(self.sub_domain)): raise Exception('配置参数异常：sub_domain 为空')
+            if(not(self.internal)): raise Exception('配置参数异常：internal 为空')
+            if(not(self.email)): raise Exception('配置参数异常：email 为空')
             logging.info('配置校验完成')
             logging.debug(f'dnspod_id: {self.dnspod_id}')
             logging.debug(f'dnspod_token: {self.dnspod_token}')
@@ -63,6 +55,7 @@ class Config(object):
             logging.error('退出')
             exit()
 
+    @classmethod
     # 从环境变量获取配置
     def get_config_from_env(self):
         logging.info(f'读取环境变量')
@@ -74,10 +67,10 @@ class Config(object):
         self.email            = os.getenv('EMAIL')
         self.last_update_time = 0
 
+    @classmethod
     # 从文件获取配置
     def get_config_from_file(self):
-        if(not(os.path.exists(self.cfg_file_path))):
-            return
+        if(not(os.path.exists(self.cfg_file_path))): return
         logging.info(f'使用配置文件[{self.cfg_file_path}]')
         parser = configparser.ConfigParser()
         parser.read(self.cfg_file_path)
@@ -91,26 +84,29 @@ class Config(object):
         self.last_update_time = 0
 
 
-class Tools(object):
-    get_ip_url = 'http://www.httpbin.org/ip'
-    # get_ip_url = 'https://api.ip.sb/ip'
-
+class Tools():
     # 获取当前公网IP
-    @classmethod
-    def get_public_ip(cls) -> str:
-        result = requests.get(cls.get_ip_url, verify=False)
-        if(result.status_code != 200):
-            raise Exception('公网IP获取失败', result)
-        else:
-            return str(json.loads(result.text)['origin'])
+    @staticmethod
+    def get_public_ip_httpbin() -> str:
+        get_ip_url = 'http://www.httpbin.org/ip'
+        result = requests.get(get_ip_url, verify=False)
+        if(result.status_code != 200): raise Exception('公网IP获取失败', result)
+        return str(json.loads(result.text)['origin'])
+
+    @staticmethod
+    def get_public_ip_ipsb() -> str:
+        get_ip_url = 'https://api.ip.sb/ip'
+        result = requests.get(get_ip_url, verify=False)
+        if(result.status_code != 200): raise Exception('公网IP获取失败', result)
+        return result.text
 
 
-class DnspodApi(object):
+class DnspodApi():
 
     __API_NAME = 'Dnspod-Api'
     __API_VERSION = '0.0.2'
 
-    get_record_url    = 'https://dnsapi.cn/Record.List'
+    get_record_url = 'https://dnsapi.cn/Record.List'
     update_record_url = 'https://dnsapi.cn/Record.Modify'
 
     def __get_headers(self, email: str):
@@ -137,8 +133,7 @@ class DnspodApi(object):
 
         response = requests.post(url=cls.update_record_url, data=data, headers=headers, timeout=3)
         result = json.loads(response.text)
-        if(int(result['status']['code']) != 1):
-            raise Exception('更新记录操作失败', result)
+        if(int(result['status']['code']) != 1): raise Exception('更新记录操作失败', result)
         logging.info(f'更新记录操作成功:{cfg.sub_domain}.{cfg.domain} => {cfg.record_ip}')
 
     @classmethod
@@ -155,32 +150,29 @@ class DnspodApi(object):
         }
         response = requests.post(url=cls.get_record_url, data=data, headers=headers, timeout=3)
         result = json.loads(response.text)
-        if(int(result['status']['code']) != 1):
-            raise Exception('获取记录操作失败', result)
+        if(int(result['status']['code']) != 1): raise Exception('获取记录操作失败', result)
         records = [{'id': r['id'], 'value':r['value']} for r in result['records'] if str(r['name']) == cfg.sub_domain and int(r['enabled']) == 1]
-        if(len(records) < 1):
-            raise Exception(f'没有找到子域名[{cfg.sub_domain}]相关记录，请先前往dnspod进行添加', result)
+        if(len(records) < 1): raise Exception(f'没有找到子域名[{cfg.sub_domain}]相关记录，请先前往dnspod进行添加', result)
         return records[0]
 
 
 def run(cfg: Config):
     current_time = int(round(time.time() * 1000))
-    is_record_timeout = (current_time - cfg.last_update_time) > 600000 # 10分钟
-    
+    is_record_timeout = (current_time - cfg.last_update_time) > 600000  # 10分钟
+
     # 初始化获取域名记录
     if(not(cfg.record_ip) or is_record_timeout):
         logging.debug('记录超时 或 没有域名记录')
         record = DnspodApi().get_record(cfg)
-        cfg.record_ip        = record['value']
-        cfg.record_id        = record['id']
+        cfg.record_ip = record['value']
+        cfg.record_id = record['id']
         cfg.last_update_time = current_time
 
     # 获取公网IP
-    public_ip = Tools().get_public_ip()
+    public_ip = Tools().get_public_ip_httpbin()
+    logging.info(f'当前IP：{public_ip}')
 
-    if(cfg.record_ip == public_ip):
-        logging.debug(f'公网IP没有变化: {public_ip}')
-        return
+    if(cfg.record_ip == public_ip): return
 
     cfg.record_ip = public_ip
     DnspodApi().update_record(cfg)
@@ -194,7 +186,9 @@ if __name__ == '__main__':
         try:
             run(cfg)
         except Exception as error:
-            logging.error(error.args[0] if(len(error.args) > 0) else error)
-            logging.debug(error.args[1] if(len(error.args) > 1) else '')
+            msg = ''
+            for a in error.args: msg += str(a) + '|'
+            logging.error(msg)
+            logging.debug(msg)
 
         time.sleep(cfg.internal)
